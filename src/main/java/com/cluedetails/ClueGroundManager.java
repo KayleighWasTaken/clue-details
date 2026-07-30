@@ -194,16 +194,45 @@ public class ClueGroundManager
 		currentZone = new Zone(client.getLocalPlayer().getWorldLocation());
 		trackedClues.clearEmptyTiles(currentZone);
 
-		for (Tile tile : itemHasSpawnedOnTileThisTick)
-		{
-			checkClueThroughRelativeDespawnTimers(tile);
-		}
+		// Drain before processing so a failure part way through doesn't leave tiles from an old scene queued forever
+		List<Tile> spawnedOnTiles = new ArrayList<>(itemHasSpawnedOnTileThisTick);
 		itemHasSpawnedOnTileThisTick.clear();
-		trackedClues.removeDespawnedClues();
-		resetEasyToEliteThisTick.forEach(this::createEasyToEliteForTile);
+		List<Tile> easyToEliteTiles = new ArrayList<>(resetEasyToEliteThisTick);
 		resetEasyToEliteThisTick.clear();
 
+		for (Tile tile : spawnedOnTiles)
+		{
+			if (!isTileInCurrentScene(tile)) continue;
+			checkClueThroughRelativeDespawnTimers(tile);
+		}
+		trackedClues.removeDespawnedClues();
+		for (Tile tile : easyToEliteTiles)
+		{
+			if (!isTileInCurrentScene(tile)) continue;
+			createEasyToEliteForTile(tile);
+		}
+
 		lastZone = currentZone;
+	}
+
+	// A Tile from a scene which has since been unloaded still answers getSceneLocation(), but getWorldLocation()
+	// throws as the scene no longer has a WorldView attached
+	private boolean isTileInCurrentScene(Tile tile)
+	{
+		WorldView worldView = client.getTopLevelWorldView();
+		if (worldView == null) return false;
+
+		Scene scene = worldView.getScene();
+		if (scene == null) return false;
+
+		Tile[][][] tiles = scene.getTiles();
+		int plane = tile.getPlane();
+		Point sceneLocation = tile.getSceneLocation();
+		if (plane < 0 || plane >= tiles.length) return false;
+		if (sceneLocation.getX() < 0 || sceneLocation.getX() >= tiles[plane].length) return false;
+		if (sceneLocation.getY() < 0 || sceneLocation.getY() >= tiles[plane][sceneLocation.getX()].length) return false;
+
+		return tiles[plane][sceneLocation.getX()][sceneLocation.getY()] == tile;
 	}
 
 	private void createEasyToEliteForTile(Tile tile)
@@ -359,7 +388,8 @@ public class ClueGroundManager
 			}
 		}
 
-		for (int i = 0; i < sortedStoredClues.size() - 1; i++)
+		// There can be fewer clues on the ground than we have stored for the tile, so stop once the ground pairs run out
+		for (int i = 0; i < sortedStoredClues.size() - 1 && minGroundItemFound + 1 < sortedGroundClues.size(); i++)
 		{
 			ClueInstance clueInstance1 = sortedStoredClues.get(i);
 			ClueInstance clueInstance2 = sortedStoredClues.get(i + 1);
