@@ -124,7 +124,8 @@ public enum ClueRegion
 	),
 	VARLAMORE(
 		new Zone(19, 45, 29, 51),
-		new Zone(20, 52, 22, 53)
+		new Zone(20, 52, 22, 53),
+		new Zone(28, 148, 28, 148)
 	);
 
 	Zone[] zones;
