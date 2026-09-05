@@ -70,7 +70,9 @@ public enum ClueRegion
 		// Entrana, slight overlap with Kandarin
 		new Zone(43, 52, 44, 52),
 		// Pest Control
-		new Zone(41, 40, 41, 41)
+		new Zone(41, 40, 41, 41),
+		// Dwarven Mine + Taverley Dungeon
+		new Zone(43, 151, 47,153)
 	),
 	FREMENNIK_PROVINCE(
 		new Zone(39, 56, 43, 57),
