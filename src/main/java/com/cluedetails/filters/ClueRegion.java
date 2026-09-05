@@ -127,8 +127,17 @@ public enum ClueRegion
 		new Zone(23, 53, 28, 53)
 	),
 	VARLAMORE(
-		new Zone(19, 45, 29, 51),
-		new Zone(20, 52, 22, 53),
+		new Zone(18, 47, 22, 53),
+		new Zone(23, 45, 28, 49),
+		new Zone(23, 50, 26, 52),
+		new Zone(19, 46),
+		// Inaccessible?? west of colo
+		new Zone(29, 48),
+		// Aldarin
+		new Zone(20, 44, 22, 46),
+		// East Stranglewood
+		new Zone(17, 51, 17, 53),
+		// Colo basement
 		new Zone(28, 148, 28, 148)
 	);
 
