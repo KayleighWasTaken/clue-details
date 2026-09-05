@@ -76,7 +76,9 @@ public enum ClueRegion
 	),
 	FREMENNIK_PROVINCE(
 		new Zone(39, 56, 43, 57),
-		new Zone(31, 58, 42, 64)
+		new Zone(31, 58, 42, 64),
+		// Keldagrim
+		new Zone(44, 158, 45, 159)
 	),
 	KANDARIN(
 		new Zone(37, 44, 41, 55),
