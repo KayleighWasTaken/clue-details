@@ -801,7 +801,7 @@ public class Clues
 			new WorldPoint(3409, 3571, 0),
 			new WorldPoint(3403, 9934, 0),
 			new WorldPoint(2434, 9817, 0),
-			new WorldPoint(2950, 10085, 0)
+			new WorldPoint(3048, 10085, 0) // Wildy GWD
 		)),
 		new Clues("Aberrant spectre: Kill", ItemID.CLUE_SCROLL_ELITE_19802, ClueTier.ELITE, null, List.of(
 			new WorldPoint(3413, 3550, 0),

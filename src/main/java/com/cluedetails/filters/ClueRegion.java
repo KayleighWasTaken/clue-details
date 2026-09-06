@@ -124,7 +124,11 @@ public enum ClueRegion
 		// DK's ladder area
 		new Zone(29, 68, 30, 68),
 		// KGP
-		new Zone(41, 162)
+		new Zone(41, 162),
+		// Waterbirth dungeon
+		new Zone(38, 158, 39, 159),
+		// Brine rat cavern
+		new Zone(42, 158)
 	),
 	KANDARIN(
 		new Zone(37, 44, 41, 55),
@@ -165,7 +169,11 @@ public enum ClueRegion
 		// Stronghold Slayer Cave
 		new Zone(37, 152, 38, 153),
 		// Witchaven Dungeon
-		new Zone(42, 151)
+		new Zone(42, 151),
+		// Kraken Cove
+		new Zone(35, 156),
+		// Corsair Cove Dungeon + Myth's Guild Basement
+		new Zone(29, 140, 32, 141)
 	),
 	KHARIDIAN_DESERT(
 		new Zone(49, 41, 55, 48),
@@ -204,7 +212,13 @@ public enum ClueRegion
 		// Tarn's Lair
 		new Zone(49, 71, 49, 72),
 		// Abandoned/Haunted Mine
-		new Zone(42, 69, 43, 71)
+		new Zone(42, 69, 43, 71),
+		// Meiyerditch Labs
+		new Zone(55, 153),
+		new Zone(55, 152, 56, 152),
+		new Zone(56, 151),
+		// Slayer Tower Basement
+		new Zone(53, 155)
 	),
 	TIRANNWN(
 		new Zone(33, 47, 35, 53),
@@ -221,7 +235,9 @@ public enum ClueRegion
 		// KBD lair
 		new Zone(35, 73),
 		// Wilderness Slayer Cave
-		new Zone(52, 157, 53, 158)
+		new Zone(52, 157, 53, 158),
+		// Wildy GWD
+		new Zone(47, 153)
 	),
 	KOUREND(
 		new Zone(17, 51, 18, 59),
