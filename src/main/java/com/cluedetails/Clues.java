@@ -740,7 +740,7 @@ public class Clues
 				new WorldPoint(2851, 9849, 0), // Taverley dungeon
 				new WorldPoint(3439, 10082, 0), // Wildy slayer dungeon
 				new WorldPoint(1639, 10060, 0), // Kourend Catacombs
-				new WorldPoint(1200, 10263, 1) // Karuulm Slayer Dungeon
+				new WorldPoint(1340, 10202, 2) // Karuulm Slayer Dungeon
 			)
 		),
 		new Clues("Ankou: Kill", ItemID.CLUE_SCROLL_ELITE_19805, ClueTier.ELITE, null, List.of(

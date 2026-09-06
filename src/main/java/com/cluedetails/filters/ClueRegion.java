@@ -156,7 +156,11 @@ public enum ClueRegion
 		// Iban's Temple
 		new Zone(31, 73),
 		// Death Altar
-		new Zone(34, 75)
+		new Zone(34, 75),
+		// Stronghold Slayer Cave
+		new Zone(37, 152, 38, 153),
+		// Witchaven Dungeon
+		new Zone(42, 151)
 	),
 	KHARIDIAN_DESERT(
 		new Zone(49, 41, 55, 48),
@@ -210,7 +214,9 @@ public enum ClueRegion
 	WILDERNESS(
 		new Zone(46, 55, 52, 61),
 		// KBD lair
-		new Zone(35, 73)
+		new Zone(35, 73),
+		// Wilderness Slayer Cave
+		new Zone(52, 157, 53, 158)
 	),
 	KOUREND(
 		new Zone(17, 51, 18, 59),
@@ -220,7 +226,10 @@ public enum ClueRegion
 		// Forthos dungeon
 		new Zone(27, 154, 29, 156),
 		// Catas
-		new Zone(25, 156, 26, 157)
+		new Zone(25, 156, 26, 157),
+		// Karuulum Dungeon (overlaps a basement in 21 159)
+		new Zone(19, 159, 21, 160),
+		new Zone(20, 158)
 	),
 	VARLAMORE(
 		new Zone(18, 47, 22, 53),
