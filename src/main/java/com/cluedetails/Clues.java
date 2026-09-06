@@ -745,8 +745,8 @@ public class Clues
 		),
 		new Clues("Ankou: Kill", ItemID.CLUE_SCROLL_ELITE_19805, ClueTier.ELITE, null, List.of(
 				new WorldPoint(2960, 3744, 0),
-				new WorldPoint(1963, 4951, 0),
-				new WorldPoint(2003, 4953, 0),
+				new WorldPoint(2315, 5229, 0), // Stronghold of Security
+				new WorldPoint(2355, 5241, 0), // Stronghold of Security
 				new WorldPoint(2468, 9802, 0),
 				new WorldPoint(3348, 10075, 0),
 				new WorldPoint(1637, 9991, 0)

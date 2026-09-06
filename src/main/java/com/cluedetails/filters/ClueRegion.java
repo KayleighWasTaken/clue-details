@@ -56,7 +56,12 @@ public enum ClueRegion
 		// Dorgesh-Kaan
 		new Zone(42, 82, 42, 83),
 		// Tears of Guthix
-		new Zone(50, 148)
+		new Zone(50, 148),
+		// Stronghold of Security
+		new Zone(29, 81), // Level 1
+		new Zone(31, 81), // Level 2
+		new Zone(33, 82), // Level 3
+		new Zone(36, 81)  // Level 4
 	),
 	KARAMJA(
 		new Zone(42, 45, 45, 48),
