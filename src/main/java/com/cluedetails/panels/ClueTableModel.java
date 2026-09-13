@@ -24,6 +24,8 @@
  */
 package com.cluedetails.panels;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -33,6 +35,7 @@ public class ClueTableModel extends AbstractTableModel
 	private static final int COLUMN_COUNT = 1;
 	private int editableRow = -1;
 
+	@Getter
 	private List<ListItem> items = new ArrayList<>();
 
 	public void setItems(List<ListItem> items)

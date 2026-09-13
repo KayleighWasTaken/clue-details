@@ -840,4 +840,12 @@ public class ClueDetailsParentPanel extends PluginPanel
 			statusLabelTimer.start();
 		});
 	}
+
+	public List<Clues> getVisibleClues()
+	{
+		return clueTableModel.getItems().stream()
+				.filter(item -> !item.isHeader())
+				.map(ListItem::getClue)
+				.collect(Collectors.toList());
+	}
 }

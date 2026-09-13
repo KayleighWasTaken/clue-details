@@ -30,6 +30,7 @@ import lombok.Getter;
 @Getter
 public class ListItem
 {
+	@Getter
 	private Clues clue;
 	private String header;
 

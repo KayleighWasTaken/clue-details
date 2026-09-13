@@ -27,6 +27,7 @@ package com.cluedetails;
 import static com.cluedetails.ClueDetailsConfig.CLUE_ITEMS_CONFIG;
 import static com.cluedetails.ClueDetailsConfig.CLUE_WIDGETS_CONFIG;
 
+import com.cluedetails.panels.ClueDetailsParentPanel;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Runnables;
@@ -71,7 +72,7 @@ public class ClueDetailsSharingManager
 
 	@Inject
 	private ClueDetailsSharingManager(ClueDetailsPlugin plugin, ClueDetailsConfig config, ChatboxPanelManager chatboxPanelManager,
-										Gson gson, ConfigManager configManager)
+									  Gson gson, ConfigManager configManager)
 	{
 		this.plugin = plugin;
 		this.config = config;
@@ -87,10 +88,7 @@ public class ClueDetailsSharingManager
 			@Override
 			protected Integer doInBackground() throws Exception
 			{
-				List<Clues> filteredClues = Clues.CLUES.stream()
-					.filter(config.filterListByTier())
-					.filter(config.filterListByRegion())
-					.collect(Collectors.toList());
+				List<Clues> filteredClues = getFilteredClues();
 
 				int counter = 0;
 
@@ -143,10 +141,7 @@ public class ClueDetailsSharingManager
 			{
 				List<ClueIdToDetails> clueIdToDetailsList = new ArrayList<>();
 
-				List<Clues> filteredClues = Clues.CLUES.stream()
-					.filter(config.filterListByTier())
-					.filter(config.filterListByRegion())
-					.collect(Collectors.toList());
+				List<Clues> filteredClues = getFilteredClues();
 
 				int counter = 0;
 
@@ -425,5 +420,18 @@ public class ClueDetailsSharingManager
 			.type(ChatMessageType.CONSOLE)
 			.runeLiteFormattedMessage(message)
 			.build());
+	}
+
+	private List<Clues> getFilteredClues()
+	{
+		if (plugin.getPanel() != null && plugin.getPanel().isVisible())
+		{
+			return plugin.getPanel().getVisibleClues();
+		} else {
+			return Clues.CLUES.stream()
+					.filter(config.filterListByTier())
+					.filter(config.filterListByRegion())
+					.collect(Collectors.toList());
+		}
 	}
 }
