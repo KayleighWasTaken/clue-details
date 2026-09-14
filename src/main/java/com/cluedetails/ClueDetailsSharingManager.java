@@ -27,7 +27,6 @@ package com.cluedetails;
 import static com.cluedetails.ClueDetailsConfig.CLUE_ITEMS_CONFIG;
 import static com.cluedetails.ClueDetailsConfig.CLUE_WIDGETS_CONFIG;
 
-import com.cluedetails.panels.ClueDetailsParentPanel;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Runnables;
