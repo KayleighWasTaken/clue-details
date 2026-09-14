@@ -52,9 +52,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import javax.swing.SwingWorker;
+import javax.swing.*;
+
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
+import net.runelite.api.Client;
+import net.runelite.api.GameState;
 import net.runelite.client.chat.QueuedMessage;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.game.chatbox.ChatboxPanelManager;
@@ -64,6 +67,7 @@ import net.runelite.client.plugins.inventorytags.InventoryTagsConfig;
 @Slf4j
 public class ClueDetailsSharingManager
 {
+	private final Client client;
 	private final ClueDetailsPlugin plugin;
 	private final ClueDetailsConfig config;
 	private final ChatboxPanelManager chatboxPanelManager;
@@ -72,9 +76,10 @@ public class ClueDetailsSharingManager
 	private final ConfigManager configManager;
 
 	@Inject
-	private ClueDetailsSharingManager(ClueDetailsPlugin plugin, ClueDetailsConfig config, ChatboxPanelManager chatboxPanelManager,
+	private ClueDetailsSharingManager(Client client, ClueDetailsPlugin plugin, ClueDetailsConfig config, ChatboxPanelManager chatboxPanelManager,
 									  Gson gson, ConfigManager configManager)
 	{
+		this.client = client;
 		this.plugin = plugin;
 		this.config = config;
 		this.chatboxPanelManager = chatboxPanelManager;
@@ -314,10 +319,25 @@ public class ClueDetailsSharingManager
 
 		String importMessage = "Are you sure you want to import " + visibleImportClueDetails.size() + " clue detail(s)?";
 
-		chatboxPanelManager.openTextMenuInput(importMessage)
-			.option("Yes", () -> importClueDetails(visibleImportClueDetails))
-			.option("No", Runnables.doNothing())
-			.build();
+		if (client.getGameState() == GameState.LOGGED_IN)
+		{
+			chatboxPanelManager.openTextMenuInput(importMessage)
+					.option("Yes", () -> importClueDetails(visibleImportClueDetails))
+					.option("No", Runnables.doNothing())
+					.build();
+		} else {
+			int confirm = JOptionPane.showConfirmDialog(
+					plugin.getPanel(),
+					importMessage,
+					"Warning",
+					JOptionPane.YES_NO_OPTION
+			);
+
+			if (confirm == 0)
+			{
+				importClueDetails(visibleImportClueDetails);
+			}
+		}
 	}
 
 	private void importClueDetails(Collection<ClueIdToDetails> importPoints)
