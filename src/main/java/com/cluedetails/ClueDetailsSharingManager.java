@@ -281,7 +281,7 @@ public class ClueDetailsSharingManager
 		catch (JsonSyntaxException e)
 		{
 			log.debug("Malformed JSON for clipboard import", e);
-			sendChatMessage("You do not have any clue detail(s) copied in your clipboard.");
+			sendChatMessage("Your clue detail(s) are improperly formatted.");
 			return;
 		}
 		catch (NumberFormatException e)
