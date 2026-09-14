@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -296,8 +297,25 @@ public class ClueDetailsSharingManager
 			return;
 		}
 
-		chatboxPanelManager.openTextMenuInput("Are you sure you want to import " + importClueDetails.size() + " clue detail(s)?")
-			.option("Yes", () -> importClueDetails(importClueDetails))
+		HashSet<Integer> visibleClueIds = getFilteredClues().stream()
+				.map(Clues::getClueID)
+				.collect(Collectors.toCollection(HashSet::new));
+
+		// Using in-place removeIf causes gson parse errors to not be caught correctly???
+		List<ClueIdToDetails> visibleImportClueDetails = importClueDetails.stream()
+				.filter(ip -> visibleClueIds.contains(ip.getId()))
+				.collect(Collectors.toList());
+
+		if (visibleImportClueDetails.isEmpty())
+		{
+			sendChatMessage("You do not have any clue detail(s) copied to your clipboard that match your filtered clues.");
+			return;
+		}
+
+		String importMessage = "Are you sure you want to import " + visibleImportClueDetails.size() + " clue detail(s)?";
+
+		chatboxPanelManager.openTextMenuInput(importMessage)
+			.option("Yes", () -> importClueDetails(visibleImportClueDetails))
 			.option("No", Runnables.doNothing())
 			.build();
 	}
