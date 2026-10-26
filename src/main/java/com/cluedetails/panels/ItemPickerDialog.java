@@ -106,9 +106,8 @@ class ItemPickerDialog extends JDialog {
 
         JButton clearButton = new JButton("Clear selected");
         clearButton.addActionListener(e ->
-        {
-            itemTable.clearSelectedItems();
-        });
+            itemTable.clearSelectedItems()
+        );
         buttonPanel.add(clearButton, BorderLayout.PAGE_END);
         return buttonPanel;
     }
@@ -118,11 +117,13 @@ class ItemPickerDialog extends JDialog {
         itemTableModel.filterItems(text);
     }
 
-    public void setOnItemSelected(Consumer<ItemDetails> consumer) {
+    public void setOnItemSelected(Consumer<ItemDetails> consumer)
+    {
         itemTable.setOnItemSelected(consumer);
     }
 
-    public void setOnItemDeselected(Consumer<ItemDetails> consumer) {
+    public void setOnItemDeselected(Consumer<ItemDetails> consumer)
+    {
         itemTable.setOnItemDeselected(consumer);
     }
 }

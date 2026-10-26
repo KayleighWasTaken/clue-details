@@ -7,19 +7,22 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class ItemTableModel extends AbstractTableModel {
+class ItemTableModel extends AbstractTableModel
+{
     private final List<ItemDetails> items = new ArrayList<>();
     private List<ItemDetails> visibleItems = new ArrayList<>();
     private static final int COLUMN_COUNT = 3;
 
-    public void setItems(Collection<ItemDetails> newItems) {
+    public void setItems(Collection<ItemDetails> newItems)
+    {
         items.clear();
         items.addAll(newItems);
         visibleItems = items;
         fireTableDataChanged();
     }
 
-    public void filterItems(String searchText) {
+    public void filterItems(String searchText)
+    {
         final String[] searchTerms = searchText.toLowerCase().split("\\s+");
 
         visibleItems = items.stream().filter(item ->
@@ -30,18 +33,21 @@ class ItemTableModel extends AbstractTableModel {
     }
 
     @Override
-    public int getRowCount() {
+    public int getRowCount()
+    {
         int itemCount = visibleItems.size();
         return itemCount % COLUMN_COUNT == 0 ? itemCount / COLUMN_COUNT : itemCount / COLUMN_COUNT + 1;
     }
 
     @Override
-    public int getColumnCount() {
+    public int getColumnCount()
+    {
         return COLUMN_COUNT;
     }
 
     @Override
-    public ItemDetails getValueAt(int rowIndex, int columnIndex) {
+    public ItemDetails getValueAt(int rowIndex, int columnIndex)
+    {
         int itemIndex = rowIndex * COLUMN_COUNT + columnIndex;
         return itemIndex >= 0 && itemIndex < visibleItems.size() ? visibleItems.get(itemIndex) : null;
     }

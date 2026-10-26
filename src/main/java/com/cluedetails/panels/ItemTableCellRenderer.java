@@ -9,7 +9,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
-class ItemTableCellRenderer extends JPanel implements TableCellRenderer {
+class ItemTableCellRenderer extends JPanel implements TableCellRenderer
+{
     private final JLabel iconLabel = new JLabel();
     private final JTextArea nameTextArea = JGenerator.makeJTextArea();
     private final static EmptyBorder UNSELECTED_BORDER = new EmptyBorder(5, 5, 5, 5);
@@ -18,7 +19,8 @@ class ItemTableCellRenderer extends JPanel implements TableCellRenderer {
             new LineBorder(ColorScheme.BRAND_ORANGE, 1)
     );
 
-    public ItemTableCellRenderer() {
+    public ItemTableCellRenderer()
+    {
         setOpaque(true);
 
         // Definitely a better way to do this
@@ -41,19 +43,24 @@ class ItemTableCellRenderer extends JPanel implements TableCellRenderer {
     }
 
     @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        if (value != null) {
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
+    {
+        if (value != null)
+        {
             ItemDetails details = (ItemDetails) value;
             nameTextArea.setText(details.getName());
             iconLabel.setIcon(details.getIcon());
-        } else {
+        } else
+        {
             nameTextArea.setText("");
             iconLabel.setIcon(null);
         }
 
-        if (isSelected) {
+        if (isSelected)
+        {
             setBorder(SELECTED_BORDER);
-        } else {
+        } else
+        {
             setBorder(UNSELECTED_BORDER);
         }
 

@@ -31,16 +31,19 @@ class ItemPickerJTable extends JTable {
 
     private final HashSet<ItemDetails> selected = new HashSet<>();
 
-    public ItemPickerJTable(TableModel tableModel) {
+    public ItemPickerJTable(TableModel tableModel)
+    {
         super(tableModel);
         setShowGrid(false);
         setTableHeader(null);
 
         setRowHeight(50);
 
-        addMouseListener(new MouseAdapter() {
+        addMouseListener(new MouseAdapter()
+        {
             @Override
-            public void mouseExited(MouseEvent e) {
+            public void mouseExited(MouseEvent e)
+            {
                 if (hoveredRow != -1 || hoveredColumn != -1) {
                     hoveredRow = -1;
                     hoveredColumn = -1;
@@ -49,7 +52,8 @@ class ItemPickerJTable extends JTable {
             }
 
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mouseClicked(MouseEvent e)
+            {
                 Point point = e.getPoint();
                 int row = rowAtPoint(point);
                 int col = columnAtPoint(point);
@@ -71,7 +75,8 @@ class ItemPickerJTable extends JTable {
             }
         });
 
-        addMouseMotionListener(new MouseMotionAdapter() {
+        addMouseMotionListener(new MouseMotionAdapter()
+        {
             @Override
             public void mouseMoved(MouseEvent e) {
                 int row = rowAtPoint(e.getPoint());
@@ -90,7 +95,8 @@ class ItemPickerJTable extends JTable {
         });
     }
 
-    public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+    public Component prepareRenderer(TableCellRenderer renderer, int row, int column)
+    {
         Component c = super.prepareRenderer(renderer, row, column);
         c.setBackground(
                 row == hoveredRow && column == hoveredColumn ? ColorScheme.DARK_GRAY_HOVER_COLOR : ColorScheme.DARKER_GRAY_COLOR
@@ -99,16 +105,19 @@ class ItemPickerJTable extends JTable {
     }
 
     @Override
-    public boolean isCellSelected(int row, int column) {
+    public boolean isCellSelected(int row, int column)
+    {
         ItemDetails cellContents = ((ItemTableModel) getModel()).getValueAt(row, column);
         return cellContents != null && selected.contains(cellContents);
     }
 
-    public List<ItemDetails> getSelectedItems() {
+    public List<ItemDetails> getSelectedItems()
+    {
         return selected.stream().sorted(Comparator.comparing(ItemDetails::getName)).collect(Collectors.toList());
     }
 
-    public void clearSelectedItems() {
+    public void clearSelectedItems()
+    {
         selected.clear();
         repaint();
     }
