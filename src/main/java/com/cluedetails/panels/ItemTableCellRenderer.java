@@ -1,6 +1,7 @@
 package com.cluedetails.panels;
 
 import net.runelite.client.ui.ColorScheme;
+import net.runelite.client.ui.FontManager;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -13,6 +14,7 @@ class ItemTableCellRenderer extends JPanel implements TableCellRenderer
 {
     private final JLabel iconLabel = new JLabel();
     private final JTextArea nameTextArea = JGenerator.makeJTextArea();
+    private final JLabel idLabel = new JLabel();
     private final static EmptyBorder UNSELECTED_BORDER = new EmptyBorder(5, 5, 5, 5);
     private final static CompoundBorder SELECTED_BORDER = new CompoundBorder(
             UNSELECTED_BORDER,
@@ -29,9 +31,16 @@ class ItemTableCellRenderer extends JPanel implements TableCellRenderer
 
         c.gridx = 0;
         c.gridy = 0;
-        c.gridheight = 3;
+        c.gridheight = 4;
         c.gridwidth = 1;
         add(iconLabel, c);
+
+        idLabel.setFont(FontManager.getRunescapeSmallFont());
+        c.gridx = 1;
+        c.gridy = 3;
+        c.gridheight = 1;
+        c.gridwidth = 5;
+        add(idLabel, c);
 
         c.gridx = 1;
         c.gridy = 2;
@@ -50,10 +59,12 @@ class ItemTableCellRenderer extends JPanel implements TableCellRenderer
             ItemDetails details = (ItemDetails) value;
             nameTextArea.setText(details.getName());
             iconLabel.setIcon(details.getIcon());
+            idLabel.setText(String.format("(ID: %d)", details.getId()));
         } else
         {
             nameTextArea.setText("");
             iconLabel.setIcon(null);
+            idLabel.setText("");
         }
 
         if (isSelected)

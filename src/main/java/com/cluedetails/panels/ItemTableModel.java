@@ -27,7 +27,10 @@ class ItemTableModel extends AbstractTableModel
 
         visibleItems = items.stream().filter(item ->
                 Arrays.stream(searchTerms)
-                        .allMatch(keyword -> item.getName().toLowerCase().contains(keyword))
+                        .allMatch(keyword ->
+                                item.getName().toLowerCase().contains(keyword)
+                                || Integer.toString(item.getId()).contains(keyword)
+                        )
         ).collect(Collectors.toCollection(ArrayList::new));
         fireTableDataChanged();
     }
