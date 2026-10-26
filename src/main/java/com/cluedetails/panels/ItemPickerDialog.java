@@ -38,7 +38,8 @@ class ItemPickerDialog extends JDialog
         JPanel content = new JPanel(new BorderLayout(0, 10));
         content.setBorder(new EmptyBorder(15, 15, 15, 15));
 
-        content.add(searchBar, BorderLayout.PAGE_START);
+        JPanel topPanel = createTopPanel();
+        content.add(topPanel, BorderLayout.PAGE_START);
 
         itemTable.setDefaultRenderer(Object.class, new ItemTableCellRenderer());
         itemTableModel.setItems(items);
@@ -48,7 +49,7 @@ class ItemPickerDialog extends JDialog
         scrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
         content.add(scrollPane);
 
-        JPanel buttonPanel = createButtonPanel();
+        JPanel buttonPanel = createBottomPanel();
 
         content.add(buttonPanel, BorderLayout.PAGE_END);
 
@@ -87,9 +88,25 @@ class ItemPickerDialog extends JDialog
         return bar;
     }
 
-    private JPanel createButtonPanel()
+    private JPanel createTopPanel()
     {
-        JPanel buttonPanel = new JPanel();
+        JPanel topPanel = new JPanel(new BorderLayout(10, 0));
+        topPanel.setBorder(new EmptyBorder(0, 0, 0 ,0));
+
+        topPanel.add(searchBar);
+
+        JButton clearButton = new JButton("Clear selected");
+        clearButton.addActionListener(e ->
+                itemTable.clearSelectedItems()
+        );
+        topPanel.add(clearButton, BorderLayout.EAST);
+
+        return topPanel;
+    }
+
+    private JPanel createBottomPanel()
+    {
+        JPanel bottomPanel = new JPanel();
 
         JButton confirmButton = new JButton("Confirm");
         confirmButton.addActionListener(e ->
@@ -100,7 +117,7 @@ class ItemPickerDialog extends JDialog
             }
             setVisible(false);
         });
-        buttonPanel.add(confirmButton);
+        bottomPanel.add(confirmButton);
 
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(e ->
@@ -111,14 +128,8 @@ class ItemPickerDialog extends JDialog
             }
             setVisible(false);
         });
-        buttonPanel.add(cancelButton);
-
-        JButton clearButton = new JButton("Clear selected");
-        clearButton.addActionListener(e ->
-                itemTable.clearSelectedItems()
-        );
-        buttonPanel.add(clearButton, BorderLayout.PAGE_END);
-        return buttonPanel;
+        bottomPanel.add(cancelButton);
+        return bottomPanel;
     }
 
     private void onSearchTextChanged()
