@@ -39,19 +39,28 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
@@ -305,6 +314,7 @@ public class ClueDetailsParentPanel extends PluginPanel
 		});
 		popupMenu.add(inputColorItem);
 
+		// TODO: switch to ItemPickerDialog
 		String inputItemsTooltip = "Add/Remove item";
 		JMenuItem inputItems = new JMenuItem(inputItemsTooltip);
 		inputItems.addActionListener(event ->
@@ -777,33 +787,49 @@ public class ClueDetailsParentPanel extends PluginPanel
 		);
 		popupMenu.add(literalTextReplace);
 
-		JMenuItem addItemToClues = new JMenuItem("Add item");
+		JMenuItem addItemToClues = new JMenuItem("Add items");
 		addItemToClues.addActionListener(event ->
 		{
-			ChatboxItemSearch itemSearch = getItemSearch("Add item");
-			itemSearch.onItemSelected((itemId) ->
+			ItemPickerDialog itemPicker = new ItemPickerDialog(SwingUtilities.windowForComponent(this), "Select items to add", plugin.getAllItems());
+			itemPicker.setOnConfirm(selectedItems ->
 			{
 				for (Clues clue : getVisibleClues())
 				{
-					addItemToClue(itemId, clue);
+					for (ItemDetails item : selectedItems)
+					{
+						addItemToClue(item.getId(), clue);
+					}
 				}
-			}).build();
+			});
+			itemPicker.setVisible(true);
 		});
 		popupMenu.add(addItemToClues);
 
-		JMenuItem removeItemFromClues = new JMenuItem("Remove item");
+		JMenuItem removeItemFromClues = new JMenuItem("Remove items");
 		removeItemFromClues.addActionListener(event ->
 		{
-			ChatboxItemSearch itemSearch = getItemSearch("Remove item");
-			itemSearch.onItemSelected((itemId) ->
+			ItemPickerDialog itemPicker = new ItemPickerDialog(SwingUtilities.windowForComponent(this), "Select items to remove", plugin.getAllItems());
+			itemPicker.setOnConfirm(selectedItems ->
 			{
 				for (Clues clue : getVisibleClues())
 				{
-					removeItemFromClue(itemId, clue);
+					for (ItemDetails item : selectedItems)
+					{
+						removeItemFromClue(item.getId(), clue);
+					}
 				}
-			}).build();
+			});
+			itemPicker.setVisible(true);
 		});
 		popupMenu.add(removeItemFromClues);
+
+//		JMenuItem replaceItemForClues = new JMenuItem("Replace items");
+//		replaceItemForClues.addActionListener(event ->
+//		{
+//			ItemPickerDialog itemPicker = new ItemPickerDialog(SwingUtilities.windowForComponent(this), "Choose item to replace", plugin.getAllItems());
+//			itemPicker.setVisible(true);
+//		});
+//		popupMenu.add(replaceItemForClues);
 
 		JMenuItem setColourForClues = new JMenuItem("Set colour");
 		setColourForClues.addActionListener(event ->
@@ -1263,4 +1289,5 @@ public class ClueDetailsParentPanel extends PluginPanel
 			g.drawString(hex, SWATCH_PADDING + SWATCH_WIDTH + HEX_PAD, this.getHeight());
 		}
 	}
+
 }
