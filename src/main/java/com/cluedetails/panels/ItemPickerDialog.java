@@ -91,13 +91,13 @@ class ItemPickerDialog extends JDialog
     private JPanel createTopPanel()
     {
         JPanel topPanel = new JPanel(new BorderLayout(10, 0));
-        topPanel.setBorder(new EmptyBorder(0, 0, 0 ,0));
+        topPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
 
         topPanel.add(searchBar);
 
         JButton clearButton = new JButton("Clear selected");
         clearButton.addActionListener(e ->
-                itemTable.clearSelectedItems()
+            itemTable.clearSelectedItems()
         );
         topPanel.add(clearButton, BorderLayout.EAST);
 

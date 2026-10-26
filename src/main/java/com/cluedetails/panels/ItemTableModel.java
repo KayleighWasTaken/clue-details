@@ -26,11 +26,11 @@ class ItemTableModel extends AbstractTableModel
         final String[] searchTerms = searchText.toLowerCase().split("\\s+");
 
         visibleItems = items.stream().filter(item ->
-                Arrays.stream(searchTerms)
-                        .allMatch(keyword ->
-                                item.getName().toLowerCase().contains(keyword)
-                                || Integer.toString(item.getId()).contains(keyword)
-                        )
+            Arrays.stream(searchTerms)
+                .allMatch(keyword ->
+                    item.getName().toLowerCase().contains(keyword)
+                    || Integer.toString(item.getId()).contains(keyword)
+                )
         ).collect(Collectors.toCollection(ArrayList::new));
         fireTableDataChanged();
     }

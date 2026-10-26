@@ -17,7 +17,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-class ItemPickerJTable extends JTable {
+class ItemPickerJTable extends JTable
+{
     @Getter
     private int hoveredRow = -1;
     @Getter
@@ -44,7 +45,8 @@ class ItemPickerJTable extends JTable {
             @Override
             public void mouseExited(MouseEvent e)
             {
-                if (hoveredRow != -1 || hoveredColumn != -1) {
+                if (hoveredRow != -1 || hoveredColumn != -1)
+                {
                     hoveredRow = -1;
                     hoveredColumn = -1;
                     repaint();
@@ -58,15 +60,21 @@ class ItemPickerJTable extends JTable {
                 int row = rowAtPoint(point);
                 int col = columnAtPoint(point);
                 ItemDetails clickedItem = (ItemDetails) tableModel.getValueAt(row, col);
-                if (clickedItem != null) {
-                    if (selected.contains(clickedItem)) {
+                if (clickedItem != null)
+                {
+                    if (selected.contains(clickedItem))
+                    {
                         selected.remove(clickedItem);
-                        if (onItemDeselected != null) {
+                        if (onItemDeselected != null)
+                        {
                             onItemDeselected.accept(clickedItem);
                         }
-                    } else {
+                    }
+                    else
+                    {
                         selected.add(clickedItem);
-                        if (onItemSelected != null) {
+                        if (onItemSelected != null)
+                        {
                             onItemSelected.accept(clickedItem);
                         }
                     }
@@ -78,14 +86,19 @@ class ItemPickerJTable extends JTable {
         addMouseMotionListener(new MouseMotionAdapter()
         {
             @Override
-            public void mouseMoved(MouseEvent e) {
+            public void mouseMoved(MouseEvent e)
+            {
                 int row = rowAtPoint(e.getPoint());
                 int col = columnAtPoint(e.getPoint());
-                if (row != hoveredRow || col != hoveredColumn) {
-                    if (tableModel.getValueAt(row, col) != null) {
+                if (row != hoveredRow || col != hoveredColumn)
+                {
+                    if (tableModel.getValueAt(row, col) != null)
+                    {
                         hoveredRow = row;
                         hoveredColumn = col;
-                    } else {
+                    }
+                    else
+                    {
                         hoveredRow = -1;
                         hoveredColumn = -1;
                     }
@@ -99,7 +112,7 @@ class ItemPickerJTable extends JTable {
     {
         Component c = super.prepareRenderer(renderer, row, column);
         c.setBackground(
-                row == hoveredRow && column == hoveredColumn ? ColorScheme.DARK_GRAY_HOVER_COLOR : ColorScheme.DARKER_GRAY_COLOR
+            row == hoveredRow && column == hoveredColumn ? ColorScheme.DARK_GRAY_HOVER_COLOR : ColorScheme.DARKER_GRAY_COLOR
         );
         return c;
     }

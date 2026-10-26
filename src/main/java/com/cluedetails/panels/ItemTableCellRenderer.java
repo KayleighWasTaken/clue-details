@@ -17,8 +17,8 @@ class ItemTableCellRenderer extends JPanel implements TableCellRenderer
     private final JLabel idLabel = new JLabel();
     private final static EmptyBorder UNSELECTED_BORDER = new EmptyBorder(5, 5, 5, 5);
     private final static CompoundBorder SELECTED_BORDER = new CompoundBorder(
-            UNSELECTED_BORDER,
-            new LineBorder(ColorScheme.BRAND_ORANGE, 1)
+        UNSELECTED_BORDER,
+        new LineBorder(ColorScheme.BRAND_ORANGE, 1)
     );
 
     public ItemTableCellRenderer()
@@ -60,7 +60,8 @@ class ItemTableCellRenderer extends JPanel implements TableCellRenderer
             nameTextArea.setText(details.getName());
             iconLabel.setIcon(details.getIcon());
             idLabel.setText(String.format("(ID: %d)", details.getId()));
-        } else
+        }
+        else
         {
             nameTextArea.setText("");
             iconLabel.setIcon(null);
@@ -70,7 +71,8 @@ class ItemTableCellRenderer extends JPanel implements TableCellRenderer
         if (isSelected)
         {
             setBorder(SELECTED_BORDER);
-        } else
+        }
+        else
         {
             setBorder(UNSELECTED_BORDER);
         }
