@@ -52,7 +52,7 @@ class ItemPickerJTable extends JTable {
             }
 
             @Override
-            public void mouseClicked(MouseEvent e)
+            public void mousePressed(MouseEvent e)
             {
                 Point point = e.getPoint();
                 int row = rowAtPoint(point);

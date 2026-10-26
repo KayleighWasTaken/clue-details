@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-class ItemPickerDialog extends JDialog {
+class ItemPickerDialog extends JDialog
+{
     private final ItemTableModel itemTableModel = new ItemTableModel();
     private final ItemPickerJTable itemTable = new ItemPickerJTable(itemTableModel);
     private final IconTextField searchBar = createSearchBar();
@@ -27,7 +28,8 @@ class ItemPickerDialog extends JDialog {
     @Setter
     private Consumer<List<ItemDetails>> onCancel;
 
-    public ItemPickerDialog(Window parent, String title, List<ItemDetails> items) {
+    public ItemPickerDialog(Window parent, String title, List<ItemDetails> items)
+    {
         super(parent, "Item Picker - " + title, ModalityType.MODELESS);
 
         setResizable(false);
@@ -61,19 +63,23 @@ class ItemPickerDialog extends JDialog {
         bar.setPreferredSize(new Dimension(FRAME_WIDTH - 20, 30));
         bar.setBackground(ColorScheme.DARKER_GRAY_COLOR);
         bar.setHoverBackgroundColor(ColorScheme.DARK_GRAY_HOVER_COLOR);
-        bar.getDocument().addDocumentListener(new DocumentListener() {
+        bar.getDocument().addDocumentListener(new DocumentListener()
+        {
             @Override
-            public void insertUpdate(DocumentEvent e) {
+            public void insertUpdate(DocumentEvent e)
+            {
                 onSearchTextChanged();
             }
 
             @Override
-            public void removeUpdate(DocumentEvent e) {
+            public void removeUpdate(DocumentEvent e)
+            {
                 onSearchTextChanged();
             }
 
             @Override
-            public void changedUpdate(DocumentEvent e) {
+            public void changedUpdate(DocumentEvent e)
+            {
                 onSearchTextChanged();
             }
         });
@@ -81,13 +87,15 @@ class ItemPickerDialog extends JDialog {
         return bar;
     }
 
-    private JPanel createButtonPanel() {
+    private JPanel createButtonPanel()
+    {
         JPanel buttonPanel = new JPanel();
 
         JButton confirmButton = new JButton("Confirm");
         confirmButton.addActionListener(e ->
         {
-            if (onConfirm != null) {
+            if (onConfirm != null)
+            {
                 onConfirm.accept(new ArrayList<>(itemTable.getSelectedItems()));
             }
             setVisible(false);
@@ -97,7 +105,8 @@ class ItemPickerDialog extends JDialog {
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(e ->
         {
-            if (onCancel != null) {
+            if (onCancel != null)
+            {
                 onCancel.accept(new ArrayList<>(itemTable.getSelectedItems()));
             }
             setVisible(false);
@@ -106,13 +115,14 @@ class ItemPickerDialog extends JDialog {
 
         JButton clearButton = new JButton("Clear selected");
         clearButton.addActionListener(e ->
-            itemTable.clearSelectedItems()
+                itemTable.clearSelectedItems()
         );
         buttonPanel.add(clearButton, BorderLayout.PAGE_END);
         return buttonPanel;
     }
 
-    private void onSearchTextChanged() {
+    private void onSearchTextChanged()
+    {
         final String text = searchBar.getText();
         itemTableModel.filterItems(text);
     }
