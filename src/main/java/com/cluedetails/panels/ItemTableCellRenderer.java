@@ -13,7 +13,7 @@ import java.awt.*;
 class ItemTableCellRenderer extends JPanel implements TableCellRenderer
 {
     private final JLabel iconLabel = new JLabel();
-    private final JTextArea nameTextArea = JGenerator.makeJTextArea();
+    private final JLabel nameLabel = new JLabel();
     private final JLabel idLabel = new JLabel();
     private final static EmptyBorder UNSELECTED_BORDER = new EmptyBorder(5, 5, 5, 5);
     private final static CompoundBorder SELECTED_BORDER = new CompoundBorder(
@@ -42,11 +42,12 @@ class ItemTableCellRenderer extends JPanel implements TableCellRenderer
         c.gridwidth = 5;
         add(idLabel, c);
 
+        nameLabel.setHorizontalAlignment(JLabel.CENTER);
         c.gridx = 1;
         c.gridy = 2;
         c.gridheight = 1;
         c.gridwidth = 5;
-        add(nameTextArea, c);
+        add(nameLabel, c);
 
         setBorder(UNSELECTED_BORDER);
     }
@@ -57,13 +58,26 @@ class ItemTableCellRenderer extends JPanel implements TableCellRenderer
         if (value != null)
         {
             ItemDetails details = (ItemDetails) value;
-            nameTextArea.setText(details.getName());
+            nameLabel.setText(details.getName());
             iconLabel.setIcon(details.getIcon());
             idLabel.setText(String.format("(ID: %d)", details.getId()));
+            int columnWidth = table.getColumnModel().getColumn(column).getWidth();
+            int nameWidth = columnWidth - (iconLabel.getWidth() + 20);
+            FontMetrics fontMetrics = getFontMetrics(nameLabel.getFont());
+            nameLabel.setPreferredSize(new Dimension(nameWidth, 20));
+            if (fontMetrics.stringWidth(details.getName()) > nameWidth)
+            {
+                setToolTipText(details.getName());
+            }
+            else
+            {
+                setToolTipText("");
+            }
         }
         else
         {
-            nameTextArea.setText("");
+            setToolTipText("");
+            nameLabel.setText("");
             iconLabel.setIcon(null);
             idLabel.setText("");
         }
