@@ -778,10 +778,11 @@ public class ClueDetailsParentPanel extends PluginPanel
 		);
 		popupMenu.add(literalTextReplace);
 
+		// TODO: add/remove all items at once rather than one at a time
 		JMenuItem addItemToClues = new JMenuItem("Add items");
 		addItemToClues.addActionListener(event ->
 		{
-			ItemPickerDialog itemPicker = new ItemPickerDialog(SwingUtilities.windowForComponent(this), "Select items to add", plugin.getAllItems());
+			ItemPickerDialog itemPicker = getItemPicker("Select items to add");
 			itemPicker.setOnConfirm(selectedItems ->
 			{
 				for (Clues clue : getVisibleClues())
@@ -799,7 +800,14 @@ public class ClueDetailsParentPanel extends PluginPanel
 		JMenuItem removeItemFromClues = new JMenuItem("Remove items");
 		removeItemFromClues.addActionListener(event ->
 		{
-			ItemPickerDialog itemPicker = new ItemPickerDialog(SwingUtilities.windowForComponent(this), "Select items to remove", plugin.getAllItems());
+			List<Clues> visibleClues = getVisibleClues();
+			Set<Integer> visibleClueItems = visibleClues.stream()
+				.flatMap(clue -> clue.getItems(plugin, configManager).stream())
+				.collect(Collectors.toSet());
+			List<ItemDetails> removableItems = plugin.getAllItems().stream()
+				.filter(item -> visibleClueItems.contains(item.getId()))
+				.collect(Collectors.toList());
+			ItemPickerDialog itemPicker = getItemPicker("Select items to remove", removableItems);
 			itemPicker.setOnConfirm(selectedItems ->
 			{
 				for (Clues clue : getVisibleClues())
@@ -814,13 +822,39 @@ public class ClueDetailsParentPanel extends PluginPanel
 		});
 		popupMenu.add(removeItemFromClues);
 
-//		JMenuItem replaceItemForClues = new JMenuItem("Replace items");
-//		replaceItemForClues.addActionListener(event ->
-//		{
-//			ItemPickerDialog itemPicker = new ItemPickerDialog(SwingUtilities.windowForComponent(this), "Choose item to replace", plugin.getAllItems());
-//			itemPicker.setVisible(true);
-//		});
-//		popupMenu.add(replaceItemForClues);
+		JMenuItem replaceItemForClues = new JMenuItem("Replace items");
+		replaceItemForClues.addActionListener(event ->
+		{
+			List<Clues> visibleClues = getVisibleClues();
+			Set<Integer> visibleClueItems = visibleClues.stream()
+				.flatMap(clue -> clue.getItems(plugin, configManager).stream())
+				.collect(Collectors.toSet());
+			List<ItemDetails> removableItems = plugin.getAllItems().stream()
+				.filter(item -> visibleClueItems.contains(item.getId()))
+				.collect(Collectors.toList());
+			ItemPickerDialog removePicker = getItemPicker("Choose items to replace", removableItems);
+			removePicker.setOnConfirm(removedItems ->
+			{
+				ItemPickerDialog addPicker = getItemPicker("Choose new items");
+				addPicker.setOnConfirm(addedItems ->
+				{
+					for (Clues clue : visibleClues)
+					{
+						for (ItemDetails removedItem : removedItems)
+						{
+							removeItemFromClue(removedItem.getId(), clue);
+						}
+						for (ItemDetails addedItem : addedItems)
+						{
+							addItemToClue(addedItem.getId(), clue);
+						}
+					}
+				});
+				addPicker.setVisible(true);
+			});
+			removePicker.setVisible(true);
+		});
+		popupMenu.add(replaceItemForClues);
 
 		JMenuItem setColourForClues = new JMenuItem("Set colour");
 		setColourForClues.addActionListener(event ->
@@ -1050,6 +1084,22 @@ public class ClueDetailsParentPanel extends PluginPanel
 			true);
 		colorPicker.setLocationRelativeTo(this);
 		return colorPicker;
+	}
+
+	private ItemPickerDialog getItemPicker(String title)
+	{
+		return getItemPicker(title, plugin.getAllItems());
+	}
+
+	private ItemPickerDialog getItemPicker(String title, List<ItemDetails> items)
+	{
+		ItemPickerDialog itemPicker = new ItemPickerDialog(
+			SwingUtilities.windowForComponent(this),
+			title,
+			items
+		);
+		itemPicker.setLocationRelativeTo(this);
+		return itemPicker;
 	}
 
 	public ChatboxItemSearch getItemSearch(String tooltip)
