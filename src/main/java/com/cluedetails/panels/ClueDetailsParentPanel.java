@@ -826,31 +826,48 @@ public class ClueDetailsParentPanel extends PluginPanel
 		replaceItemForClues.addActionListener(event ->
 		{
 			List<Clues> visibleClues = getVisibleClues();
-			Set<Integer> visibleClueItems = visibleClues.stream()
-				.flatMap(clue -> clue.getItems(plugin, configManager).stream())
-				.collect(Collectors.toSet());
-			List<ItemDetails> removableItems = plugin.getAllItems().stream()
-				.filter(item -> visibleClueItems.contains(item.getId()))
-				.collect(Collectors.toList());
-			ItemPickerDialog removePicker = getItemPicker("Choose items to replace", removableItems);
-			removePicker.setOnConfirm(removedItems ->
+			Set<Integer> visibleClueItems =
+				visibleClues.stream()
+					.flatMap(clue -> clue.getItems(plugin, configManager).stream())
+					.collect(Collectors.toSet());
+			List<ItemDetails> removableItems =
+				plugin.getAllItems().stream()
+					.filter(item -> visibleClueItems.contains(item.getId()))
+					.collect(Collectors.toList());
+
+			ItemPickerDialog removePicker = getItemPicker("Choose item to replace", removableItems, false);
+			removePicker.setOnConfirm(removedItemList ->
 			{
-				ItemPickerDialog addPicker = getItemPicker("Choose new items");
-				addPicker.setOnConfirm(addedItems ->
+				if (removedItemList.isEmpty())
 				{
-					for (Clues clue : visibleClues)
+					JOptionPane.showMessageDialog(
+						this,
+						"Replace mode needs you to select an item",
+						"No item selected for replacement",
+						JOptionPane.PLAIN_MESSAGE
+					);
+				}
+				else
+				{
+					int removedItemId = removedItemList.get(0).getId();
+					List<Clues> affectedClues =
+						visibleClues.stream()
+							.filter(clue -> clue.getItems(plugin, configManager).contains(removedItemId))
+							.collect(Collectors.toList());
+					ItemPickerDialog addPicker = getItemPicker("Select new items");
+					addPicker.setOnConfirm(addedItems ->
 					{
-						for (ItemDetails removedItem : removedItems)
+						for (Clues clue : affectedClues)
 						{
-							removeItemFromClue(removedItem.getId(), clue);
+							removeItemFromClue(removedItemId, clue);
+							for (ItemDetails addedItem : addedItems)
+							{
+								addItemToClue(addedItem.getId(), clue);
+							}
 						}
-						for (ItemDetails addedItem : addedItems)
-						{
-							addItemToClue(addedItem.getId(), clue);
-						}
-					}
-				});
-				addPicker.setVisible(true);
+					});
+					addPicker.setVisible(true);
+				}
 			});
 			removePicker.setVisible(true);
 		});
@@ -1086,17 +1103,23 @@ public class ClueDetailsParentPanel extends PluginPanel
 		return colorPicker;
 	}
 
+	private ItemPickerDialog getItemPicker(String title, List<ItemDetails> items)
+	{
+		return getItemPicker(title, items, true);
+	}
+
 	private ItemPickerDialog getItemPicker(String title)
 	{
 		return getItemPicker(title, plugin.getAllItems());
 	}
 
-	private ItemPickerDialog getItemPicker(String title, List<ItemDetails> items)
+	private ItemPickerDialog getItemPicker(String title, List<ItemDetails> items, boolean allowMultiSelect)
 	{
 		ItemPickerDialog itemPicker = new ItemPickerDialog(
 			SwingUtilities.windowForComponent(this),
 			title,
-			items
+			items,
+			allowMultiSelect
 		);
 		itemPicker.setLocationRelativeTo(this);
 		return itemPicker;

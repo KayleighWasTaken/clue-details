@@ -5,6 +5,7 @@ import lombok.Setter;
 import net.runelite.client.ui.ColorScheme;
 
 import javax.swing.*;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
@@ -32,11 +33,15 @@ class ItemPickerJTable extends JTable
 
     private final HashSet<ItemDetails> selected = new HashSet<>();
 
-    public ItemPickerJTable(TableModel tableModel)
+    private final boolean allowMultiSelect;
+
+    public ItemPickerJTable(TableModel tableModel, boolean multiSelect)
     {
         super(tableModel);
         setShowGrid(false);
         setTableHeader(null);
+
+        allowMultiSelect = multiSelect;
 
         setRowHeight(50);
 
@@ -70,8 +75,21 @@ class ItemPickerJTable extends JTable
                             onItemDeselected.accept(clickedItem);
                         }
                     }
+                    else if (allowMultiSelect || selected.isEmpty())
+                    {
+                        selected.add(clickedItem);
+                        if (onItemSelected != null)
+                        {
+                            onItemSelected.accept(clickedItem);
+                        }
+                    }
                     else
                     {
+                        if (onItemDeselected != null)
+                        {
+                            selected.forEach(onItemDeselected);
+                        }
+                        selected.clear();
                         selected.add(clickedItem);
                         if (onItemSelected != null)
                         {
@@ -131,6 +149,10 @@ class ItemPickerJTable extends JTable
 
     public void clearSelectedItems()
     {
+        if (onItemDeselected != null)
+        {
+            selected.forEach(onItemDeselected);
+        }
         selected.clear();
         repaint();
     }

@@ -9,6 +9,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -16,7 +19,7 @@ import java.util.function.Consumer;
 class ItemPickerDialog extends JDialog
 {
     private final ItemTableModel itemTableModel = new ItemTableModel();
-    private final ItemPickerJTable itemTable = new ItemPickerJTable(itemTableModel);
+    private final ItemPickerJTable itemTable;
     private final IconTextField searchBar = createSearchBar();
 
     private final static int FRAME_WIDTH = 600;
@@ -28,9 +31,11 @@ class ItemPickerDialog extends JDialog
     @Setter
     private Consumer<List<ItemDetails>> onCancel;
 
-    public ItemPickerDialog(Window parent, String title, List<ItemDetails> items)
+    public ItemPickerDialog(Window parent, String title, List<ItemDetails> items, boolean allowMultiSelect)
     {
         super(parent, "Item Picker - " + title, ModalityType.MODELESS);
+
+        itemTable = new ItemPickerJTable(itemTableModel, allowMultiSelect);
 
         setResizable(false);
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
