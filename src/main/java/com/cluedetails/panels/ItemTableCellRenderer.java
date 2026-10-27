@@ -1,5 +1,6 @@
 package com.cluedetails.panels;
 
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 
@@ -10,6 +11,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
+@Slf4j
 class ItemTableCellRenderer extends JPanel implements TableCellRenderer
 {
     private final JLabel iconLabel = new JLabel();
@@ -20,6 +22,7 @@ class ItemTableCellRenderer extends JPanel implements TableCellRenderer
         UNSELECTED_BORDER,
         new LineBorder(ColorScheme.BRAND_ORANGE, 1)
     );
+    private final static int NAME_PADDING = 20;
 
     public ItemTableCellRenderer()
     {
@@ -58,16 +61,18 @@ class ItemTableCellRenderer extends JPanel implements TableCellRenderer
         if (value != null)
         {
             ItemDetails details = (ItemDetails) value;
-            nameLabel.setText(details.getName());
-            iconLabel.setIcon(details.getIcon());
+            String name = details.getName();
+            ImageIcon icon = details.getIcon();
+            nameLabel.setText(name);
+            iconLabel.setIcon(icon);
             idLabel.setText(String.format("(ID: %d)", details.getId()));
             int columnWidth = table.getColumnModel().getColumn(column).getWidth();
-            int nameWidth = columnWidth - (iconLabel.getWidth() + 20);
+            int nameWidth = columnWidth - (icon.getIconWidth() + NAME_PADDING);
             FontMetrics fontMetrics = getFontMetrics(nameLabel.getFont());
             nameLabel.setPreferredSize(new Dimension(nameWidth, 20));
-            if (fontMetrics.stringWidth(details.getName()) > nameWidth)
+            if (fontMetrics.stringWidth(name) > nameWidth)
             {
-                setToolTipText(details.getName());
+                setToolTipText(name);
             }
             else
             {
