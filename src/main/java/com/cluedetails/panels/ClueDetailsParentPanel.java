@@ -44,7 +44,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
-import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -306,46 +305,56 @@ public class ClueDetailsParentPanel extends PluginPanel
 		});
 		popupMenu.add(inputColorItem);
 
-		// TODO: switch to ItemPickerDialog
-		String inputItemsTooltip = "Add/Remove item";
-		JMenuItem inputItems = new JMenuItem(inputItemsTooltip);
-		inputItems.addActionListener(event ->
+		JMenuItem removeItems = new JMenuItem("Remove items");
+		removeItems.addActionListener(event ->
 		{
-			ListItem item = (ListItem) clueTableModel.getValueAt(rightClickedRow, 0);
-			Clues clue = item.getClue();
+			Clues affectedClue = ((ListItem) clueTableModel.getValueAt(rightClickedRow, 0)).getClue();
+			Set<Integer> affectedClueItems = new HashSet<>(affectedClue.getItems(plugin, configManager));
+			List<ItemDetails> removableItems = plugin.getAllItems().stream()
+				.filter(item -> affectedClueItems.contains(item.getId()))
+				.collect(Collectors.toList());
 
-			ChatboxItemSearch itemSearch = getItemSearch(inputItemsTooltip);
-			itemSearch.onItemSelected((itemId) ->
+			ItemPickerDialog itemPicker = getItemPicker("Select items to remove", removableItems);
+			itemPicker.setOnConfirm(removedItems ->
 			{
-				// Get existing Clue itemIds
-				int clueId = clue.getClueID();
-				List<Integer> clueItemIds = cluePreferenceManager.getItemsPreference(clueId);
-
-				if (clueItemIds == null)
+				int confirm = showItemTableConfirmDialog(
+					removedItems,
+					"Confirm item removal",
+					String.format("Remove the following items from %s?", affectedClue.getDetail(configManager))
+				);
+				if (confirm == 0)
 				{
-					clueItemIds = new ArrayList<>();
+					for (ItemDetails item : removedItems)
+					{
+						removeItemFromClue(item.getId(), affectedClue);
+					}
 				}
-
-				// Remove if already present
-				if (clueItemIds.contains(itemId))
-				{
-					clueItemIds.remove(itemId);
-					String chatMessage = "Removed item from " + WordUtils.capitalize(clue.getClueTier().name().toLowerCase()) + " clue";
-					sendChatMessage(chatMessage);
-				}
-				// Add if not present
-				else
-				{
-					clueItemIds.add(itemId);
-					String chatMessage = "Added item to " + WordUtils.capitalize(clue.getClueTier().name().toLowerCase()) + " clue";
-					sendChatMessage(chatMessage);
-				}
-
-				// Save Clue itemIds
-				cluePreferenceManager.saveItemsPreference(clueId, clueItemIds);
-			}).build();
+			});
 		});
-		popupMenu.add(inputItems);
+		popupMenu.add(removeItems);
+
+		JMenuItem addItems = new JMenuItem("Add items");
+		addItems.addActionListener(event ->
+		{
+			Clues affectedClue = ((ListItem) clueTableModel.getValueAt(rightClickedRow, 0)).getClue();
+			ItemPickerDialog itemPicker = getItemPicker("Select items to add");
+			itemPicker.setOnConfirm(addedItems ->
+			{
+				int confirm = showItemTableConfirmDialog(
+					addedItems,
+					"Confirm item addition",
+					String.format("Add the following items to %s?", affectedClue.getDetail(configManager))
+				);
+				if (confirm == 0)
+				{
+					for (ItemDetails item : addedItems)
+					{
+						addItemToClue(item.getId(), affectedClue);
+					}
+				}
+			});
+		});
+		popupMenu.add(addItems);
 
 		JMenu resetMenu = new JMenu("Reset clue detail");
 		popupMenu.add(resetMenu);
@@ -786,7 +795,12 @@ public class ClueDetailsParentPanel extends PluginPanel
 			ItemPickerDialog itemPicker = getItemPicker("Select items to add");
 			itemPicker.setOnConfirm(selectedItems ->
 			{
-				if (showAddItemConfirmDialog(selectedItems) == 0)
+				int confirm = showItemTableConfirmDialog(
+					selectedItems,
+					"Confirm item addition",
+					"Are you sure you want to add the following items to the currently filtered clues?"
+				);
+				if (confirm == 0)
 				{
 					for (Clues clue : getVisibleClues())
 					{
@@ -814,7 +828,12 @@ public class ClueDetailsParentPanel extends PluginPanel
 			ItemPickerDialog itemPicker = getItemPicker("Select items to remove", removableItems);
 			itemPicker.setOnConfirm(selectedItems ->
 			{
-				if (showRemoveItemConfirmDialog(selectedItems) == 0)
+				int confirm = showItemTableConfirmDialog(
+					selectedItems,
+					"Confirm item removal",
+					"Are you sure you want to remove the following items from the currently filtered clues?"
+				);
+				if (confirm == 0)
 				{
 					for (Clues clue : getVisibleClues())
 					{
@@ -1314,24 +1333,6 @@ public class ClueDetailsParentPanel extends PluginPanel
 			"Confirm colour change",
 			JOptionPane.YES_NO_OPTION,
 			JOptionPane.PLAIN_MESSAGE
-		);
-	}
-
-	private int showRemoveItemConfirmDialog(List<ItemDetails> removedItems)
-	{
-		return showItemTableConfirmDialog(
-			removedItems,
-			"Confirm item removal",
-			"Are you sure you want to remove the following items from the currently filtered clues?"
-		);
-	}
-
-	private int showAddItemConfirmDialog(List<ItemDetails> addedItems)
-	{
-		return showItemTableConfirmDialog(
-			addedItems,
-			"Confirm item addition",
-			"Are you sure you want to add the following items to the currently filtered clues?"
 		);
 	}
 
