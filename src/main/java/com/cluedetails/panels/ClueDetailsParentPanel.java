@@ -788,7 +788,7 @@ public class ClueDetailsParentPanel extends PluginPanel
 		popupMenu.add(literalTextReplace);
 
 		// TODO: add/remove all items at once rather than one at a time
-		JMenuItem addItemToClues = new JMenuItem("Add items");
+		JMenuItem addItemToClues = new JMenuItem("Add items to clue");
 		addItemToClues.addActionListener(event ->
 		{
 			ItemPickerDialog itemPicker = getItemPicker("Select items to add");
@@ -814,7 +814,7 @@ public class ClueDetailsParentPanel extends PluginPanel
 		});
 		popupMenu.add(addItemToClues);
 
-		JMenuItem removeItemFromClues = new JMenuItem("Remove items");
+		JMenuItem removeItemFromClues = new JMenuItem("Remove items from clue");
 		removeItemFromClues.addActionListener(event ->
 		{
 			List<Clues> visibleClues = getVisibleClues();
