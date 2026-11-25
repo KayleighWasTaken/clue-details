@@ -329,6 +329,7 @@ public class ClueDetailsParentPanel extends PluginPanel
 					}
 				}
 			});
+			itemPicker.setVisible(true);
 		});
 		popupMenu.add(removeItems);
 
@@ -352,6 +353,7 @@ public class ClueDetailsParentPanel extends PluginPanel
 					}
 				}
 			});
+			itemPicker.setVisible(true);
 		});
 		popupMenu.add(addItems);
 
