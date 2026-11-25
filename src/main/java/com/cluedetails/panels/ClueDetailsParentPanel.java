@@ -64,7 +64,6 @@ import net.runelite.client.ui.PluginPanel;
 import net.runelite.client.ui.components.IconTextField;
 import net.runelite.client.ui.components.colorpicker.RuneliteColorPicker;
 import net.runelite.client.util.ImageUtil;
-import org.apache.commons.text.WordUtils;
 
 @Slf4j
 public class ClueDetailsParentPanel extends PluginPanel
