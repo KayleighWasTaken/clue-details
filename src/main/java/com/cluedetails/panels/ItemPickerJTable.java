@@ -35,13 +35,16 @@ class ItemPickerJTable extends JTable
 
     private final boolean allowMultiSelect;
 
-    public ItemPickerJTable(TableModel tableModel, boolean multiSelect)
+    private final boolean allowSelection;
+
+    public ItemPickerJTable(TableModel tableModel, boolean selectable, boolean multiSelect)
     {
         super(tableModel);
         setShowGrid(false);
         setTableHeader(null);
 
         allowMultiSelect = multiSelect;
+        allowSelection = selectable;
 
         setRowHeight(50);
 
@@ -61,6 +64,10 @@ class ItemPickerJTable extends JTable
             @Override
             public void mousePressed(MouseEvent e)
             {
+                if (!allowSelection)
+                {
+                    return;
+                }
                 Point point = e.getPoint();
                 int row = rowAtPoint(point);
                 int col = columnAtPoint(point);

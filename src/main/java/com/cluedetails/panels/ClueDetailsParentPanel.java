@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -785,11 +786,14 @@ public class ClueDetailsParentPanel extends PluginPanel
 			ItemPickerDialog itemPicker = getItemPicker("Select items to add");
 			itemPicker.setOnConfirm(selectedItems ->
 			{
-				for (Clues clue : getVisibleClues())
+				if (showAddItemConfirmDialog(selectedItems) == 0)
 				{
-					for (ItemDetails item : selectedItems)
+					for (Clues clue : getVisibleClues())
 					{
-						addItemToClue(item.getId(), clue);
+						for (ItemDetails item : selectedItems)
+						{
+							addItemToClue(item.getId(), clue);
+						}
 					}
 				}
 			});
@@ -810,11 +814,14 @@ public class ClueDetailsParentPanel extends PluginPanel
 			ItemPickerDialog itemPicker = getItemPicker("Select items to remove", removableItems);
 			itemPicker.setOnConfirm(selectedItems ->
 			{
-				for (Clues clue : getVisibleClues())
+				if (showRemoveItemConfirmDialog(selectedItems) == 0)
 				{
-					for (ItemDetails item : selectedItems)
+					for (Clues clue : getVisibleClues())
 					{
-						removeItemFromClue(item.getId(), clue);
+						for (ItemDetails item : selectedItems)
+						{
+							removeItemFromClue(item.getId(), clue);
+						}
 					}
 				}
 			});
@@ -857,12 +864,15 @@ public class ClueDetailsParentPanel extends PluginPanel
 					ItemPickerDialog addPicker = getItemPicker("Select new items");
 					addPicker.setOnConfirm(addedItems ->
 					{
-						for (Clues clue : affectedClues)
+						if (showReplaceItemConfirmDialog(removedItemList, addedItems, affectedClues.size()) == 0)
 						{
-							removeItemFromClue(removedItemId, clue);
-							for (ItemDetails addedItem : addedItems)
+							for (Clues clue : affectedClues)
 							{
-								addItemToClue(addedItem.getId(), clue);
+								removeItemFromClue(removedItemId, clue);
+								for (ItemDetails addedItem : addedItems)
+								{
+									addItemToClue(addedItem.getId(), clue);
+								}
 							}
 						}
 					});
@@ -1305,6 +1315,82 @@ public class ClueDetailsParentPanel extends PluginPanel
 			JOptionPane.YES_NO_OPTION,
 			JOptionPane.PLAIN_MESSAGE
 		);
+	}
+
+	private int showRemoveItemConfirmDialog(List<ItemDetails> removedItems)
+	{
+		return showItemTableConfirmDialog(
+			removedItems,
+			"Confirm item removal",
+			"Are you sure you want to remove the following items from the currently filtered clues?"
+		);
+	}
+
+	private int showAddItemConfirmDialog(List<ItemDetails> addedItems)
+	{
+		return showItemTableConfirmDialog(
+			addedItems,
+			"Confirm item addition",
+			"Are you sure you want to add the following items to the currently filtered clues?"
+		);
+	}
+
+	private int showItemTableConfirmDialog(List<ItemDetails> items, String title, String message)
+	{
+		JScrollPane scrollPane = getItemTableScrollPane(items, null);
+
+		Object[] msg = {
+			message,
+			scrollPane
+		};
+
+		return JOptionPane.showConfirmDialog(
+			this,
+			msg,
+			title,
+			JOptionPane.YES_NO_OPTION,
+			JOptionPane.PLAIN_MESSAGE
+		);
+	}
+
+	private int showReplaceItemConfirmDialog(List<ItemDetails> removedItemList, List<ItemDetails> addedItems, int affectedClueCount)
+	{
+		JScrollPane removedItemScrollPane = getItemTableScrollPane(removedItemList, 1);
+		JScrollPane addedItemScrollPane = getItemTableScrollPane(addedItems, null);
+
+		Object[] msg = {
+			"Replace:",
+			removedItemScrollPane,
+			String.format("With: (will affect %d clues)", affectedClueCount),
+			addedItemScrollPane
+		};
+
+		return JOptionPane.showConfirmDialog(
+			this,
+			msg,
+			"Confirm item replace",
+			JOptionPane.YES_NO_OPTION,
+			JOptionPane.PLAIN_MESSAGE
+		);
+	}
+
+	private JScrollPane getItemTableScrollPane(List<ItemDetails> items, Integer overrideColumnCount)
+	{
+		int tableColumns = overrideColumnCount == null ? Math.min(items.size(), ItemTableModel.DEFAULT_COLUMN_COUNT): overrideColumnCount;
+		ItemTableModel tableModel = new ItemTableModel(tableColumns);
+		ItemPickerJTable itemTable = new ItemPickerJTable(tableModel, false, false);
+		itemTable.setDefaultRenderer(Object.class, new ItemTableCellRenderer());
+		tableModel.setItems(items);
+
+		JScrollPane scrollPane = new JScrollPane(itemTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		int tableHeight = tableModel.getRowCount() * itemTable.getRowHeight();
+		int minPaneHeight = itemTable.getRowHeight();
+		int maxPaneHeight = 3 * itemTable.getRowHeight();
+		int paneHeight = Math.max(Math.min(tableHeight, maxPaneHeight), minPaneHeight);
+		scrollPane.setPreferredSize(new Dimension((int) scrollPane.getPreferredSize().getWidth(), paneHeight));
+		scrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
+
+		return scrollPane;
 	}
 
 	// https://stackoverflow.com/a/79706033

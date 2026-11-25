@@ -35,7 +35,7 @@ class ItemPickerDialog extends JDialog
     {
         super(parent, "Item Picker - " + title, ModalityType.MODELESS);
 
-        itemTable = new ItemPickerJTable(itemTableModel, allowMultiSelect);
+        itemTable = new ItemPickerJTable(itemTableModel, true, allowMultiSelect);
 
         setResizable(false);
         setSize(FRAME_WIDTH, FRAME_HEIGHT);

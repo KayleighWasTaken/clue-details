@@ -11,7 +11,21 @@ class ItemTableModel extends AbstractTableModel
 {
     private final List<ItemDetails> items = new ArrayList<>();
     private List<ItemDetails> visibleItems = new ArrayList<>();
-    private static final int COLUMN_COUNT = 3;
+    static final int DEFAULT_COLUMN_COUNT = 3;
+
+    private final int columnCount;
+
+    public ItemTableModel()
+    {
+        super();
+        columnCount = DEFAULT_COLUMN_COUNT;
+    }
+
+    public ItemTableModel(int cols)
+    {
+        super();
+        columnCount = cols;
+    }
 
     public void setItems(Collection<ItemDetails> newItems)
     {
@@ -39,19 +53,19 @@ class ItemTableModel extends AbstractTableModel
     public int getRowCount()
     {
         int itemCount = visibleItems.size();
-        return itemCount % COLUMN_COUNT == 0 ? itemCount / COLUMN_COUNT : itemCount / COLUMN_COUNT + 1;
+        return itemCount % columnCount == 0 ? itemCount / columnCount : itemCount / columnCount + 1;
     }
 
     @Override
     public int getColumnCount()
     {
-        return COLUMN_COUNT;
+        return columnCount;
     }
 
     @Override
     public ItemDetails getValueAt(int rowIndex, int columnIndex)
     {
-        int itemIndex = rowIndex * COLUMN_COUNT + columnIndex;
+        int itemIndex = rowIndex * columnCount + columnIndex;
         return itemIndex >= 0 && itemIndex < visibleItems.size() ? visibleItems.get(itemIndex) : null;
     }
 }
