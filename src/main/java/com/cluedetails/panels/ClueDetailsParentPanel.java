@@ -316,10 +316,17 @@ public class ClueDetailsParentPanel extends PluginPanel
 			ItemPickerDialog itemPicker = getItemPicker("Select items to remove", removableItems);
 			itemPicker.setOnConfirm(removedItems ->
 			{
+				Color clueColour = affectedClue.getDetailColor(configManager);
+				String clueColourString = String.format("#%02X%02X%02X", clueColour.getRed(), clueColour.getGreen(), clueColour.getBlue());
+				String message = String.format(
+					"<html>Remove the following items from <font color=%s>%s</font>?</html>",
+					clueColourString,
+					affectedClue.getDetail(configManager)
+				);
 				int confirm = showItemTableConfirmDialog(
 					removedItems,
 					"Confirm item removal",
-					String.format("Remove the following items from %s?", affectedClue.getDetail(configManager))
+					message
 				);
 				if (confirm == 0)
 				{
@@ -340,10 +347,17 @@ public class ClueDetailsParentPanel extends PluginPanel
 			ItemPickerDialog itemPicker = getItemPicker("Select items to add");
 			itemPicker.setOnConfirm(addedItems ->
 			{
+				Color clueColour = affectedClue.getDetailColor(configManager);
+				String clueColourString = String.format("#%02X%02X%02X", clueColour.getRed(), clueColour.getGreen(), clueColour.getBlue());
+				String message = String.format(
+					"<html>Add the following items to <font color=%s>%s</font>?</html>",
+					clueColourString,
+					affectedClue.getDetail(configManager)
+				);
 				int confirm = showItemTableConfirmDialog(
 					addedItems,
 					"Confirm item addition",
-					String.format("Add the following items to %s?", affectedClue.getDetail(configManager))
+					message
 				);
 				if (confirm == 0)
 				{
